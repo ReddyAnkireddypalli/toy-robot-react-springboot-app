@@ -85,7 +85,7 @@ public class ToyRobotService {
                 }
 
             }
-            state = new State(10L, facing.getX(), facing.getY(), location.getX(), location.getY(), result, placed);
+            state = new State(facing.getX(), facing.getY(), location.getX(), location.getY(), result, placed);
             toyRobotStateRepository.save(state);
             toyRobotLocationRepository.save(location);
             toyRobotFacingRepository.save(facing);
@@ -123,7 +123,7 @@ public class ToyRobotService {
             }
         }      
 
-        state = new State(10L, facing.getX(), facing.getY(), location.getX(), location.getY(), result, placed);
+        state = new State(facing.getX(), facing.getY(), location.getX(), location.getY(), result, placed);
         toyRobotStateRepository.save(state);
         toyRobotLocationRepository.save(location);
         toyRobotFacingRepository.save(facing);
