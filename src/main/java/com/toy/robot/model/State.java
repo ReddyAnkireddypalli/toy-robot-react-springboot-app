@@ -20,19 +20,14 @@ public class State {
 
     public State(){}
 
-    public State(Long id, int fx, int fy, int lx, int ly, String result, boolean placed) {
-        this.id = id;
+    public State(int fx, int fy, int lx, int ly, String result, boolean placed) {
         this.fx = fx;
         this.fy = fy;
         this.lx = lx;
         this.ly = ly;
         this.result = result;
         this.placed = placed;
-    }
-
-    public Long getId() {
-        return id;
-    }
+    }  
 
     public int getFx() {
         return fx;
