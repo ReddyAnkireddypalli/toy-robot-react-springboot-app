@@ -81,7 +81,6 @@ public class ToyRobotService {
 
                     }
                 } catch (Exception e) {
-                    logger.error("Exception : " + e.getMessage());
                 }
 
             }
