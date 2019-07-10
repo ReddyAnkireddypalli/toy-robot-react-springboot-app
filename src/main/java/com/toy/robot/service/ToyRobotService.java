@@ -18,9 +18,6 @@ import java.util.Optional;
 @Service
 public class ToyRobotService {
 
-    Logger logger = LoggerFactory.getLogger(ToyRobotService.class);
-
-
     @Autowired
     ToyRobotStateRepository toyRobotStateRepository;
 
@@ -63,10 +60,7 @@ public class ToyRobotService {
         State state = optionalState.orElse(null);
         Facing facing = optionalFacing.orElse(new Facing(0, 0));
         Location location = optionalLocation.orElse(new Location(0, 0));
-
-        logger.info("Input : " + input);
-        logger.info("Command : " + command);
-
+     
 
         if (command.equals("PLACE")) {
 
@@ -90,9 +84,6 @@ public class ToyRobotService {
                     logger.error("Exception : " + e.getMessage());
                 }
 
-                logger.info("Placed Inside PLACED command  : " + command);
-                logger.info("Result : " + result);
-
             }
             state = new State(10L, facing.getX(), facing.getY(), location.getX(), location.getY(), result, placed);
             toyRobotStateRepository.save(state);
@@ -100,8 +91,6 @@ public class ToyRobotService {
             toyRobotFacingRepository.save(facing);
             return state;
         }
-
-        logger.info("Placed value after PLACED : " + command);
 
         // Ignore everything else until robot is placed
         if (placed) {
@@ -132,10 +121,7 @@ public class ToyRobotService {
                 result = "RIGHT";
 
             }
-        }
-
-        logger.info("Command  : " + command);
-        logger.info("Result : " + result);
+        }      
 
         state = new State(10L, facing.getX(), facing.getY(), location.getX(), location.getY(), result, placed);
         toyRobotStateRepository.save(state);
