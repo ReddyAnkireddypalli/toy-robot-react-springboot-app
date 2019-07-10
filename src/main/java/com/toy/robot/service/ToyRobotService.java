@@ -15,14 +15,15 @@ import java.util.Map;
 @Service
 public class ToyRobotService {
 
-    @Autowired
-    ToyRobotStateRepository toyRobotStateRepository;
 
     @Autowired
-    ToyRobotLocationRepository toyRobotLocationRepository;
+    private ToyRobotStateRepository toyRobotStateRepository;
 
     @Autowired
-    ToyRobotFacingRepository toyRobotFacingRepository;
+    private ToyRobotLocationRepository toyRobotLocationRepository;
+
+    @Autowired
+    private ToyRobotFacingRepository toyRobotFacingRepository;
 
     private static Map<String, Facing> orientation = new HashMap<>();
 
@@ -80,6 +81,11 @@ public class ToyRobotService {
 
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                if(optionalFacing == null){
+                    optionalFacing = new Facing(0,0);
                 }
 
             }
@@ -100,6 +106,7 @@ public class ToyRobotService {
 
         // Ignore everything else until robot is placed
         if (placed) {
+            //We can change this to switch statement
             if (command.equals("MOVE")) {
 
                 int moveX = optionalFacing.getX();
@@ -115,15 +122,13 @@ public class ToyRobotService {
                     result = "MOVE";
                 }
             } else if (command.equals("LEFT")) {
-                int x = optionalFacing.getX();
                 int y = optionalFacing.getY();
-                optionalFacing = new Facing(-y, x);
+                optionalFacing = new Facing(-y, optionalFacing.getX());
                 result = "LEFT";
 
             } else if (command.equals("RIGHT")) {
                 int x = optionalFacing.getX();
-                int y = optionalFacing.getY();
-                optionalFacing = new Facing(y, -x);
+                optionalFacing = new Facing(optionalFacing.getY(), -x);
                 result = "RIGHT";
 
             }
