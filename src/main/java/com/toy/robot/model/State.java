@@ -9,7 +9,7 @@ import javax.persistence.Table;
 public class State {
 
     @Id
-    private Long id = 10L;
+    private Long sId = 10L;
     private int fx;
     private int fy;
     private int lx;
