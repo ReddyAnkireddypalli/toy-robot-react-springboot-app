@@ -1,6 +1,7 @@
 package com.toy.robot.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -9,7 +10,8 @@ import javax.persistence.Table;
 public class State {
 
     @Id
-    private Long sId = 10L;
+    @GeneratedValue
+    private Long sId;
     private int fx;
     private int fy;
     private int lx;
@@ -27,7 +29,8 @@ public class State {
         this.ly = ly;
         this.result = result;
         this.placed = placed;
-    }  
+    }
+
 
     public int getFx() {
         return fx;

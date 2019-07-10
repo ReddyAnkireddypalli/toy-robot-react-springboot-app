@@ -7,7 +7,8 @@ import javax.persistence.*;
 public class Facing {
 
     @Id
-    private Long fId = 200L;
+    @GeneratedValue
+    private Long fId;
     private int x;
     private int y;
 

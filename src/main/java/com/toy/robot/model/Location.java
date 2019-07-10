@@ -7,7 +7,8 @@ import javax.persistence.*;
 public class Location {
 
     @Id
-    private Long lId = 100L;
+    @GeneratedValue
+    private Long lId;
     private int x;
     private int y;
 

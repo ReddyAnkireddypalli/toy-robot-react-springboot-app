@@ -6,14 +6,11 @@ import com.toy.robot.model.State;
 import com.toy.robot.repository.ToyRobotFacingRepository;
 import com.toy.robot.repository.ToyRobotLocationRepository;
 import com.toy.robot.repository.ToyRobotStateRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class ToyRobotService {
@@ -46,21 +43,23 @@ public class ToyRobotService {
     public State getResults(String input) {
 
         String result = "";
+        State state = new State();
+        Location location = new Location();
+        Facing optionalFacing = new Facing();
 
-        Optional<State> optionalState = toyRobotStateRepository.findById(10L);
-        Optional<Location> optionalLocation = toyRobotLocationRepository.findById(100L);
-        Optional<Facing> optionalFacing = toyRobotFacingRepository.findById(200L);
+        if (toyRobotStateRepository.count()> 0) {
+            state = toyRobotStateRepository.findAll().get(0);
+            location = toyRobotLocationRepository.findAll().get(0);
+            optionalFacing = toyRobotFacingRepository.findAll().get(0);
+        }
 
-        boolean placed = optionalState.map(State::isPlaced).orElse(false);
+
+        boolean placed = state.isPlaced();
 
         // If the first word isn't a command, we ignore it
         String[] inputLine = input.split(",");
         String command = inputLine[0];
 
-        State state = optionalState.orElse(null);
-        Facing facing = optionalFacing.orElse(new Facing(0, 0));
-        Location location = optionalLocation.orElse(new Location(0, 0));
-     
 
         if (command.equals("PLACE")) {
 
@@ -70,10 +69,10 @@ public class ToyRobotService {
                     int x = Integer.parseInt(inputLine[1]);
                     int y = Integer.parseInt(inputLine[2]);
                     String f = inputLine[3];
-                    facing = orientation.get(f);
+                    optionalFacing = orientation.get(f);
 
                     // Check if the robot is still on the table, and valid direction
-                    if (x > -1 && x < 5 && y > -1 && y < 5 && (facing != null)) {
+                    if (x > -1 && x < 5 && y > -1 && y < 5 && (optionalFacing != null)) {
 
                         location = new Location(x, y);
                         placed = true;
@@ -84,10 +83,18 @@ public class ToyRobotService {
                 }
 
             }
-            state = new State(facing.getX(), facing.getY(), location.getX(), location.getY(), result, placed);
+            state = new State(optionalFacing.getX(), optionalFacing.getY(), location.getX(), location.getY(), result, placed);
+
+            if (toyRobotStateRepository.count()> 0) {
+
+                toyRobotStateRepository.deleteAll();
+                toyRobotLocationRepository.deleteAll();
+                toyRobotFacingRepository.deleteAll();
+            }
+
             toyRobotStateRepository.save(state);
             toyRobotLocationRepository.save(location);
-            toyRobotFacingRepository.save(facing);
+            toyRobotFacingRepository.save(optionalFacing);
             return state;
         }
 
@@ -95,8 +102,8 @@ public class ToyRobotService {
         if (placed) {
             if (command.equals("MOVE")) {
 
-                int moveX = facing.getX();
-                int moveY = facing.getY();
+                int moveX = optionalFacing.getX();
+                int moveY = optionalFacing.getY();
 
                 // Make sure the robot won't fall off the table
                 int nextX = location.getX() + moveX;
@@ -108,24 +115,32 @@ public class ToyRobotService {
                     result = "MOVE";
                 }
             } else if (command.equals("LEFT")) {
-                int x = facing.getX();
-                int y = facing.getY();
-                facing = new Facing(-y, x);
+                int x = optionalFacing.getX();
+                int y = optionalFacing.getY();
+                optionalFacing = new Facing(-y, x);
                 result = "LEFT";
 
             } else if (command.equals("RIGHT")) {
-                int x = facing.getX();
-                int y = facing.getY();
-                facing = new Facing(y, -x);
+                int x = optionalFacing.getX();
+                int y = optionalFacing.getY();
+                optionalFacing = new Facing(y, -x);
                 result = "RIGHT";
 
             }
-        }      
+        }
 
-        state = new State(facing.getX(), facing.getY(), location.getX(), location.getY(), result, placed);
+        state = new State(optionalFacing.getX(), optionalFacing.getY(), location.getX(), location.getY(), result, placed);
+
+        if (toyRobotStateRepository.count()> 0) {
+
+            toyRobotStateRepository.deleteAll();
+            toyRobotLocationRepository.deleteAll();
+            toyRobotFacingRepository.deleteAll();
+        }
+
         toyRobotStateRepository.save(state);
         toyRobotLocationRepository.save(location);
-        toyRobotFacingRepository.save(facing);
+        toyRobotFacingRepository.save(optionalFacing);
         return state;
     }
 }
