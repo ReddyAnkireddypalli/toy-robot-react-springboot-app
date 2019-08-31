@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 public class ToyRobotController {
 
     @Autowired
-    ToyRobotService toyRobotService;
+    private ToyRobotService toyRobotService;
 
     /**
      * It return the just the text which is available to text box in UI.
